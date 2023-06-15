@@ -269,6 +269,18 @@ mouse:
 	;no hay nada que revisar
 	cmp cx,17
 	jb mouse_no_clic
+	;Si el mouse fue presionado en la columna 29
+	;no hay nada que revisar
+	cmp cx,29
+	je mouse_no_clic
+	;Si el mouse fue presionado en la columna 
+	;no hay nada que revisar
+	cmp cx,35
+	je mouse_no_clic
+	;Si el mouse fue presionado en la columna 40
+	;no hay nada que revisar
+	cmp cx,41
+	je mouse_no_clic
 	;Si el mouse fue presionado despues de la columna 62
 	;no hay nada que revisar
 	cmp cx,62
@@ -286,9 +298,39 @@ mouse:
 
 	;Si el mouse fue presionado antes o dentro de la columna 28 y despues de la 24
 	;revisar si fue dentro de un boton
-	;Botones entre columnas 24 y 28: '7', '4', '1', 'C'
+	;Botones entre columnas 24 y 28: '7', '4', '1', '0'
 	cmp cx,28
 	jbe botones_7_4_1_0
+
+	;Si el mouse fue presionado antes o dentro de la columna 34 y despues de la 30
+	;revisar si fue dentro de un boton
+	;Botones entre columnas 30 y 34: '8', '5', '1', 'A'
+	cmp cx,34
+	jbe botones_8_5_2_A
+
+	;Si el mouse fue presionado antes o dentro de la columna 40 y despues de la 36
+	;revisar si fue dentro de un boton
+	;Botones entre columnas 36 y 40: '9', '6', '3', 'B'
+	cmp cx,41
+	jbe botones_9_6_3_B
+
+	;Si el mouse fue presionado antes o dentro de la columna 46 y despues de la 42
+	;revisar si fue dentro de un boton
+	;Botones entre columnas 42 y 46: 'F', 'E', 'D', 'C'
+	cmp cx,46
+	jbe botones_F_E_D_C
+
+	;Si el mouse fue presionado antes o dentro de la columna 55 y despues de la 51
+	;revisar si fue dentro de un boton
+	;Botones entre columnas 42 y 55: '+', '*', '%'
+	cmp cx,55
+	jbe botones_Suma_Multilicacion_Residuo
+
+	;Si el mouse fue presionado antes o dentro de la columna 62 y despues de la 58
+	;revisar si fue dentro de un boton
+	;Botones entre columnas 42 y 62: '+', '*', '%'
+	cmp cx,62
+	jbe botones_Resta_Cociente_Igual
 
 	;;;
 	;;; COMPLETAR COMPARACIONES
@@ -302,6 +344,14 @@ botones_base_num:
 	;corresponde con boton 'Dec'
 	cmp dx,9
 	jbe botonDec
+
+	;corresponde con boton 'Dec'
+	cmp dx,13
+	jbe botonHex
+
+	;corresponde con boton 'Dec'
+	cmp dx,17
+	jbe botonBin
 
 	;;;;;Completar
 
@@ -343,18 +393,147 @@ botones_7_4_1_0:
 botones_8_5_2_A:
 	;Revisar si el renglon en donde fue presionado el mouse
 	;corresponde con boton '8'
+	cmp dx,9
+	jbe boton8
+
+	;renglon 12 es espacio vacio
+	cmp dx,10
+	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
 	;corresponde con boton '5'
+	cmp dx,13
+	jbe boton5
+
+	;renglon 16 es espacio vacio
+	cmp dx,14
+	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
 	;corresponde con boton '2'
+	cmp dx,17
+	jbe boton2
+
+	;renglon 20 es espacio vacio
+	cmp dx,20
+	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
 	;corresponde con boton 'A'
+	cmp dx,21
+	jbe botonA
 
 	;Si no es ninguno de los anteriores
 	jmp mouse_no_clic
+
+botones_9_6_3_B:
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton '9'
+	cmp dx,9
+	jbe boton9
+
+	;renglon 12 es espacio vacio
+	cmp dx,10
+	je mouse_no_clic
+
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton '6'
+	cmp dx,13
+	jbe boton6
+
+	;renglon 16 es espacio vacio
+	cmp dx,14
+	je mouse_no_clic
+
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton '3'
+	cmp dx,17
+	jbe boton3
+
+	;renglon 20 es espacio vacio
+	cmp dx,20
+	je mouse_no_clic
+
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton 'B'
+	cmp dx,21
+	jbe botonB
+
+	;Si no es ninguno de los anteriores
+	jmp mouse_no_clic
+
+botones_F_E_D_C:
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton 'F'
+	cmp dx,9
+	jbe botonF
+
+	;renglon 12 es espacio vacio
+	cmp dx,10
+	je mouse_no_clic
+
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton 'E'
+	cmp dx,13
+	jbe boton6
+
+	;renglon 16 es espacio vacio
+	cmp dx,14
+	je mouse_no_clic
+
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton 'D'
+	cmp dx,17
+	jbe botonD
+
+	;renglon 20 es espacio vacio
+	cmp dx,20
+	je mouse_no_clic
+
+	;Revisar si el renglon en donde fue presionado el mouse
+	;corresponde con boton 'C'
+	cmp dx,21
+	jbe botonC
+
+	;Si no es ninguno de los anteriores
+	jmp mouse_no_clic
+
+botones_Suma_Multilicacion_Residuo:
+	;Botón Suma
+	cmp dx,9
+	jb mouse_no_clic
+	cmp dx,11
+	jbe botonSuma
+
+	;Botón Multiplicación
+	cmp dx,12
+	je mouse_no_clic
+	cmp dx,15
+	jbe botonMult
+
+	;Botón Residuo
+	cmp dx,16
+	je mouse_no_clic
+	cmp dx,19
+	jbe botonDivR
+botones_Resta_Cociente_Igual:
+	;Botón Suma
+	cmp dx,9
+	jb mouse_no_clic
+	cmp dx,11
+	jbe botonResta
+
+	;Botón Multiplicación
+	cmp dx,12
+	je mouse_no_clic
+	cmp dx,15
+	jbe botonDivC
+
+	;Botón Residuo
+	cmp dx,16
+	je mouse_no_clic
+	cmp dx,19
+	jbe botonIgual
 ;Dependiendo la posicion del mouse
 ;se salta a la seccion correspondiente
 botonX:
@@ -364,19 +543,33 @@ boton0:
 boton1:
 	jmp boton1_1
 boton2:
+	jmp boton2_1
 boton3:
+	jmp boton3_1
 boton4:
+	jmp boton4_1
 boton5:
+	jmp boton5_1
 boton6:
+	jmp boton6_1
 boton7:
+	jmp boton7_1
 boton8:
+	jmp boton8_1
 boton9:
+	jmp boton9_1
 botonA:
+	jmp botonA_1
 botonB:
+	jmp botonB_1
 botonC:
+	jmp botonC_1
 botonD:
+	jmp botonD_1
 botonE:
+	jmp botonE_1
 botonF:
+	jmp botonF_1
 botonSuma:
 botonResta:
 botonMult:
@@ -410,6 +603,80 @@ boton1_1:
 	;Se cumplieron todas las condiciones
 	mov num_boton,1
 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+boton2_1:
+	;Se cumplieron todas las condiciones
+	mov num_boton,2
+	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+boton3_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,3
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+boton4_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,4
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+boton5_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,5
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+
+boton6_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,6
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+
+boton7_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,7
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+
+boton8_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,8
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+
+boton9_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,9
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonA_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,0A0h
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonB_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,0Bh
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonC_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,0Ch
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonD_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,0Dh
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonE_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,0Eh
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonF_1:
+ 	;Se cumplieron todas las condiciones
+ 	mov num_boton,0Fh
+ 	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
 
 ;Salto auxiliar para hacer un salto más largo
 jmp_lee_oper1:
