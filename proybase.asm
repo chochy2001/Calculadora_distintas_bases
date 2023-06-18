@@ -691,7 +691,8 @@ jmp_lee_oper1:
 boton0_1:
 	;Agregar la logica para verificar el boton 
 	;y limpiar la pantalla de la calculadora
-	jmp mouse_no_clic
+	mov num_boton,0
+	jmp jmp_lee_oper1 
 
 lee_oper1:
 	cmp [operador],0	;compara el valor del operador que puede ser 0, '+', '-', '*', '/', '%'
