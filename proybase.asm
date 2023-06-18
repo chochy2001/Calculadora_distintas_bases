@@ -734,6 +734,28 @@ lee_oper1:
 	cmp [conta1],4 		;compara si el contador para num1 llego al maximo
 	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
+	
+	cmp id_base,1		;Si id_base = 1 (hex)
+	je agregar_num_arr	;Imprime todos los numeros
+
+	cmp id_base,2		;si id_base = 2 (bin)
+	je case_id_2		;salta a case_id_2
+
+	cmp id_base,0		;si id_base = 0 (Dec)
+	je case_id_0		;salta a case_id_0 
+
+case_id_0:
+	cmp num_boton,9		;compara numero seleccionado con 9
+	jg no_lee_num		;si es mayor no leas numero
+	jle agregar_num_arr	;si es menor o igual, agrega numero
+
+case_id_2:
+	cmp num_boton,1		;compara numero seleccionado con 1
+	jg no_lee_num		;si es mayor, no leas		
+	jle agregar_num_arr	;si es menor o igual, agrega
+
+
+agregar_num_arr:
 	mov al,num_boton	;valor del boton presionado en AL
 	mov di,[conta1] 	;copia el valor de conta1 en registro indice DI
 	mov [num1+di],al 	;num1 es un arreglo de tipo byte
