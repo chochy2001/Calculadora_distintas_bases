@@ -653,7 +653,7 @@ boton9_1:
 
 botonA_1:
  	;Se cumplieron todas las condiciones
- 	mov num_boton,0A0h
+ 	mov num_boton,0Ah
  	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
 
 botonB_1:
