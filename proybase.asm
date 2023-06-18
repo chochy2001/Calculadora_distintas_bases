@@ -142,6 +142,7 @@ conta2 		dw 		0
 operador 	db 		0
 num_boton 	db 		0
 num_impr 	db 		0
+id_base		db		0
 
 ;Auxiliares para calculo de digitos de un numero decimal de hasta 5 digitos
 diezmil		dw		10000d
@@ -345,11 +346,11 @@ botones_base_num:
 	cmp dx,9
 	jbe botonDec
 
-	;corresponde con boton 'Dec'
+	;corresponde con boton 'Hex'
 	cmp dx,13
 	jbe botonHex
 
-	;corresponde con boton 'Dec'
+	;corresponde con boton 'Bin'
 	cmp dx,17
 	jbe botonBin
 
