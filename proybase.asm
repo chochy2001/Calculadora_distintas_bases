@@ -257,7 +257,7 @@ mouse:
 	;se va a revisar si fue dentro del boton [X]
 	cmp dx,0
 	je botonX
-	;Si el mouse fue presionado antes del renglon 9
+	;Si el mouse fue presionado antes del renglon 7
 	;no hay nada que revisar
 	cmp dx,7
 	jb mouse_no_clic
@@ -380,7 +380,7 @@ botones_7_4_1_0:
 	jbe boton1
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -415,7 +415,7 @@ botones_8_5_2_A:
 	jbe boton2
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -451,7 +451,7 @@ botones_9_6_3_B:
 	jbe boton3
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -487,7 +487,7 @@ botones_F_E_D_C:
 	jbe botonD
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
