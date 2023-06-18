@@ -475,7 +475,7 @@ botones_F_E_D_C:
 	;Revisar si el renglon en donde fue presionado el mouse
 	;corresponde con boton 'E'
 	cmp dx,13
-	jbe boton6
+	jbe botonE
 
 	;renglon 16 es espacio vacio
 	cmp dx,14
