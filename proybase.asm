@@ -573,10 +573,15 @@ botonF:
 botonSuma:
 	jmp botonSuma_1
 botonResta:
+	jmp botonResta_1
 botonMult:
+	jmp botonMult_1
 botonDivC:
+	jmp botonDivC_1
 botonDivR:
+	jmp botonDivR_1
 botonIgual:
+	jmp botonIgual_1
 botonDec:
 	call LIMPIA_PANTALLA_CALC
 	jmp mouse_no_clic
@@ -684,6 +689,26 @@ botonF_1:
 
 botonSuma_1:
 	mov operador,02Bh		;O2Bh = '+' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonResta_1:
+	mov operador,02Dh	 	;O2Dh = '-' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonMult_1:
+	mov operador,02Ah		;O2Ah = '*' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonDivC_1:
+	mov operador,02Fh		;02Fh = '/' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonDivR_1:
+	mov operador,025h		;025h = '%' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonIgual_1:
+	mov operador,03Dh		;03Dh = '=' en ASCII
 	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 ;Salto auxiliar para hacer un salto más largo
