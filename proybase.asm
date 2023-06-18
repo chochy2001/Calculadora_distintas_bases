@@ -720,6 +720,11 @@ imprime_num1:
 	posiciona_cursor [ren_aux],[col_aux] 	;Posiciona el cursor en pantalla usando ren_aux y col_aux
 	mov cl,[num1+di] 		;copia el digito en CL
 	add cl,30h				;Pasa valor ASCII
+	cmp cl,39h				;Compara si CL con a 39h
+	jbe print_char			;Salta a print_char si es menor o igual a 39h
+	add cl,7				;Suma 7 para transformar ASCII HEX
+	
+print_char:
 	imprime_caracter_color cl,bgNegro,cBlanco	;Imprime caracter en CL, color blanco
 	inc di 					;incrementa DI para recorrer el arreglo num1
 	pop cx 					;recupera el valor de CX al inicio del loop
