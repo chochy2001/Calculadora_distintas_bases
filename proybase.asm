@@ -571,6 +571,7 @@ botonE:
 botonF:
 	jmp botonF_1
 botonSuma:
+	jmp botonSuma_1
 botonResta:
 botonMult:
 botonDivC:
@@ -680,6 +681,10 @@ botonF_1:
  	;Se cumplieron todas las condiciones
  	mov num_boton,0Fh
  	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
+
+botonSuma_1:
+	mov operador,02Bh		;O2Bh = '+' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 ;Salto auxiliar para hacer un salto más largo
 jmp_lee_oper1:
