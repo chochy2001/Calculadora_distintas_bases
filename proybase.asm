@@ -580,7 +580,10 @@ botonDec:
 	call LIMPIA_PANTALLA_CALC
 	jmp mouse_no_clic
 botonHex:
+	call LIMPIA_PANTALLA_CALC
+	jmp mouse_no_clic
 botonBin:
+	call LIMPIA_PANTALLA_CALC
 	jmp mouse_no_clic
 ;Logica para revisar si el mouse fue presionado en [X]
 ;[X] se encuentra en renglon 0 y entre columnas 76 y 79
