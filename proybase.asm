@@ -1097,6 +1097,22 @@ salir:
         posiciona_cursor [boton_renglon],[boton_columna]
 		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
         
+		;Imprime Boton Clr
+		mov [boton_columna],17
+		mov [boton_renglon],19
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'C',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'l',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'r',[boton_color],[boton_caracter_color]
 
 		;Imprime un '0' inicial en la calculadora
 		posiciona_cursor 3,57d
