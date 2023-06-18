@@ -584,12 +584,15 @@ botonDivR:
 botonIgual:
 	jmp botonIgual_1
 botonDec:
+	mov id_base,0				;0 = Dec
 	call LIMPIA_PANTALLA_CALC
 	jmp mouse_no_clic
 botonHex:
+	mov id_base,1				;1 = hex
 	call LIMPIA_PANTALLA_CALC
 	jmp mouse_no_clic
 botonBin:
+	mov id_base,2				;2 = bin
 	call LIMPIA_PANTALLA_CALC
 	jmp mouse_no_clic
 ;Logica para revisar si el mouse fue presionado en [X]
