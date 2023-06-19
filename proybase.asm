@@ -142,6 +142,7 @@ conta2 		dw 		0
 operador 	db 		0
 num_boton 	db 		0
 num_impr 	db 		0
+id_base		db		0
 
 ;Auxiliares para calculo de digitos de un numero decimal de hasta 5 digitos
 diezmil		dw		10000d
@@ -257,7 +258,7 @@ mouse:
 	;se va a revisar si fue dentro del boton [X]
 	cmp dx,0
 	je botonX
-	;Si el mouse fue presionado antes del renglon 9
+	;Si el mouse fue presionado antes del renglon 7
 	;no hay nada que revisar
 	cmp dx,7
 	jb mouse_no_clic
@@ -345,13 +346,17 @@ botones_base_num:
 	cmp dx,9
 	jbe botonDec
 
-	;corresponde con boton 'Dec'
+	;corresponde con boton 'Hex'
 	cmp dx,13
 	jbe botonHex
 
-	;corresponde con boton 'Dec'
+	;corresponde con boton 'Bin'
 	cmp dx,17
 	jbe botonBin
+
+	;corresponde con boton 'Cls'
+	cmp dx,21
+	jbe botonCls
 
 	;;;;;Completar
 
@@ -380,7 +385,7 @@ botones_7_4_1_0:
 	jbe boton1
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -415,7 +420,7 @@ botones_8_5_2_A:
 	jbe boton2
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -451,7 +456,7 @@ botones_9_6_3_B:
 	jbe boton3
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -475,7 +480,7 @@ botones_F_E_D_C:
 	;Revisar si el renglon en donde fue presionado el mouse
 	;corresponde con boton 'E'
 	cmp dx,13
-	jbe boton6
+	jbe botonE
 
 	;renglon 16 es espacio vacio
 	cmp dx,14
@@ -487,7 +492,7 @@ botones_F_E_D_C:
 	jbe botonD
 
 	;renglon 20 es espacio vacio
-	cmp dx,20
+	cmp dx,18
 	je mouse_no_clic
 
 	;Revisar si el renglon en donde fue presionado el mouse
@@ -571,17 +576,35 @@ botonE:
 botonF:
 	jmp botonF_1
 botonSuma:
+	jmp botonSuma_1
 botonResta:
+	jmp botonResta_1
 botonMult:
+	jmp botonMult_1
 botonDivC:
+	jmp botonDivC_1
 botonDivR:
+	jmp botonDivR_1
 botonIgual:
+	jmp botonIgual_1
 botonDec:
+	mov id_base,0				;0 = Dec
 	call LIMPIA_PANTALLA_CALC
+	call SELECT_DEC
 	jmp mouse_no_clic
 botonHex:
-botonBin:
+	mov id_base,1				;1 = hex
+	call LIMPIA_PANTALLA_CALC
+	call SELECT_HEX
 	jmp mouse_no_clic
+botonBin:
+	mov id_base,2				;2 = bin
+	call LIMPIA_PANTALLA_CALC
+	call SELECT_BIN
+	jmp mouse_no_clic
+botonCls:
+	call LIMPIA_PANTALLA_CALC
+	jmp mouse_no_clic	
 ;Logica para revisar si el mouse fue presionado en [X]
 ;[X] se encuentra en renglon 0 y entre columnas 76 y 79
 botonX_1:
@@ -599,6 +622,11 @@ botonX_3:
 ;Logica para revisar si el mouse fue presionado en '1'
 ;boton '1' se encuentra entre renglones 15 y 17,
 ;y entre columnas 24 y 28
+boton0_1:
+	;Se cumplieron todas las condiciones
+	mov num_boton,0
+	jmp jmp_lee_oper1		 ;Salto a 'jmp_lee_oper1' para procesar el numero
+
 boton1_1:
 	;Se cumplieron todas las condiciones
 	mov num_boton,1
@@ -650,7 +678,7 @@ boton9_1:
 
 botonA_1:
  	;Se cumplieron todas las condiciones
- 	mov num_boton,0A0h
+ 	mov num_boton,0Ah
  	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
 
 botonB_1:
@@ -678,6 +706,30 @@ botonF_1:
  	mov num_boton,0Fh
  	jmp jmp_lee_oper1 		;Salto a 'jmp_lee_oper1' para procesar el numero
 
+botonSuma_1:
+	mov operador,02Bh		;O2Bh = '+' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonResta_1:
+	mov operador,02Dh	 	;O2Dh = '-' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonMult_1:
+	mov operador,02Ah		;O2Ah = '*' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonDivC_1:
+	mov operador,02Fh		;02Fh = '/' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonDivR_1:
+	mov operador,025h		;025h = '%' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
+botonIgual_1:
+	mov operador,03Dh		;03Dh = '=' en ASCII
+	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+
 ;Salto auxiliar para hacer un salto más largo
 jmp_lee_oper1:
 	jmp lee_oper1
@@ -685,10 +737,11 @@ jmp_lee_oper1:
 ;Logica para revisar si el mouse fue presionado en C
 ;boton C se encuentra entre renglones 18 y 20,
 ;y entre columnas 24 y 28
-boton0_1:
+;boton0_1:
 	;Agregar la logica para verificar el boton 
 	;y limpiar la pantalla de la calculadora
-	jmp mouse_no_clic
+	
+	;jmp jmp_lee_oper1 
 
 lee_oper1:
 	cmp [operador],0	;compara el valor del operador que puede ser 0, '+', '-', '*', '/', '%'
@@ -696,6 +749,37 @@ lee_oper1:
 	cmp [conta1],4 		;compara si el contador para num1 llego al maximo
 	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
+
+	cmp num_boton,0		;prueba si el num_botn es 0	
+	je case_0			;si es 0 salta a case_0
+	jne base_cmp		;Si no es salta a base_cmp
+
+case_0:	
+	cmp conta1,0		;compara si conta1 es 0
+	je no_lee_num		;si es igual no agrega mas 0's a pantalla
+	
+base_cmp:
+	cmp id_base,1		;Si id_base = 1 (hex)
+	je agregar_num_arr	;Imprime todos los numeros
+
+	cmp id_base,2		;si id_base = 2 (bin)
+	je case_id_2		;salta a case_id_2
+
+	cmp id_base,0		;si id_base = 0 (Dec)
+	je case_id_0		;salta a case_id_0 
+
+case_id_0:
+	cmp num_boton,9		;compara numero seleccionado con 9
+	jg no_lee_num		;si es mayor no leas numero
+	jle agregar_num_arr	;si es menor o igual, agrega numero
+
+case_id_2:
+	cmp num_boton,1		;compara numero seleccionado con 1
+	jg no_lee_num		;si es mayor, no leas		
+	jle agregar_num_arr	;si es menor o igual, agrega
+
+
+agregar_num_arr:
 	mov al,num_boton	;valor del boton presionado en AL
 	mov di,[conta1] 	;copia el valor de conta1 en registro indice DI
 	mov [num1+di],al 	;num1 es un arreglo de tipo byte
@@ -716,6 +800,11 @@ imprime_num1:
 	posiciona_cursor [ren_aux],[col_aux] 	;Posiciona el cursor en pantalla usando ren_aux y col_aux
 	mov cl,[num1+di] 		;copia el digito en CL
 	add cl,30h				;Pasa valor ASCII
+	cmp cl,39h				;Compara si CL con a 39h
+	jbe print_char			;Salta a print_char si es menor o igual a 39h
+	add cl,7				;Suma 7 para transformar ASCII HEX
+	
+print_char:
 	imprime_caracter_color cl,bgNegro,cBlanco	;Imprime caracter en CL, color blanco
 	inc di 					;incrementa DI para recorrer el arreglo num1
 	pop cx 					;recupera el valor de CX al inicio del loop
@@ -727,6 +816,72 @@ lee_oper2:
 	cmp [conta2],4 		;compara si el contador para num2 llego al maximo
 	jae no_lee_num 		;si conta2 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
+	cmp [conta2],4 		;compara si el contador para num1 llego al maximo
+	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
+						;y no hace nada
+
+	cmp num_boton,0		;prueba si el num_botn es 0	
+	je case_0			;si es 0 salta a case_0
+	jne base_cmp2		;Si no es salta a base_cmp
+
+case_02:	
+	cmp conta2,0		;compara si conta1 es 0
+	je no_lee_num		;si es igual no agrega mas 0's a pantalla
+	
+base_cmp2:
+	cmp id_base,1		;Si id_base = 1 (hex)
+	je agregar_num_arr2	;Imprime todos los numeros
+
+	cmp id_base,2		;si id_base = 2 (bin)
+	je case_id_22		;salta a case_id_2
+
+	cmp id_base,0		;si id_base = 0 (Dec)
+	je case_id_02		;salta a case_id_0 
+
+case_id_02:
+	cmp num_boton,9		;compara numero seleccionado con 9
+	jg no_lee_num		;si es mayor no leas numero
+	jle agregar_num_arr2	;si es menor o igual, agrega numero
+
+case_id_22:
+	cmp num_boton,1		;compara numero seleccionado con 1
+	jg no_lee_num		;si es mayor, no leas		
+	jle agregar_num_arr2	;si es menor o igual, agrega
+
+
+agregar_num_arr2:
+	mov al,num_boton	;valor del boton presionado en AL
+	mov di,[conta2] 	;copia el valor de conta1 en registro indice DI
+	mov [num2+di],al 	;num1 es un arreglo de tipo byte
+						;se utiliza di para acceder el elemento di-esimo del arreglo num1
+						;se guarda el valor del boton presionado en el arreglo
+	inc [conta2] 		;incrementa conta1 por numero correctamente leido
+	
+	;Se imprime el numero del arreglo num1 de acuerdo a conta1
+	xor di,di 			;limpia DI para utilizarlo
+	mov cx,[conta2] 	;prepara CX para loop de acuerdo al numero de digitos introducidos
+	mov [ren_aux],3 	;variable ren_aux para hacer operaciones en pantalla 
+						;ren_aux se mantiene fijo a lo largo del siguiente loop
+imprime_num2:
+	push cx 				;guarda el valor de CX en la pila
+	mov [col_aux],58d 		;variable col_aux para hacer operaciones en pantalla 
+							;para recorrer la pantalla al imprimir el numero
+	sub [col_aux],cl 		;Para calcular la columna en donde comienza a imprimir en pantalla de acuerdo a CX
+	posiciona_cursor [ren_aux],[col_aux] 	;Posiciona el cursor en pantalla usando ren_aux y col_aux
+	mov cl,[num2+di] 		;copia el digito en CL
+	add cl,30h				;Pasa valor ASCII
+	cmp cl,39h				;Compara si CL con a 39h
+	jbe print_char2			;Salta a print_char si es menor o igual a 39h
+	add cl,7				;Suma 7 para transformar ASCII HEX
+	
+print_char2:
+	imprime_caracter_color cl,bgNegro,cBlanco	;Imprime caracter en CL, color blanco
+	inc di 					;incrementa DI para recorrer el arreglo num1
+	pop cx 					;recupera el valor de CX al inicio del loop
+	loop imprime_num2 		
+
+	jmp mouse_no_clic					
+
 
 no_lee_num:
 	jmp mouse_no_clic
@@ -1088,6 +1243,22 @@ salir:
         posiciona_cursor [boton_renglon],[boton_columna]
 		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
         
+		;Imprime Boton Clr
+		mov [boton_columna],17
+		mov [boton_renglon],19
+		mov [boton_color],bgCyan
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'C',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'l',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'r',[boton_color],[boton_caracter_color]
 
 		;Imprime un '0' inicial en la calculadora
 		posiciona_cursor 3,57d
@@ -1288,5 +1459,173 @@ salir:
 
 		ret 			;Regreso de llamada a procedimiento
 	endp	 			;Indica fin de procedimiento UI para el ensamblador
+
+	SELECT_DEC proc
+
+	 ;Imprime Boton Dec
+		mov [boton_columna],17
+		mov [boton_renglon],7
+		mov [boton_color],bgAzulClaro
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'D',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'c',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Hex
+		mov [boton_columna],17
+		mov [boton_renglon],11
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'H',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'x',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Bin
+		mov [boton_columna],17
+		mov [boton_renglon],15
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'B',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'i',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
+
+		ret
+	endp	
+
+	SELECT_HEX proc
+
+	 ;Imprime Boton Dec
+		mov [boton_columna],17
+		mov [boton_renglon],7
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'D',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'c',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Hex
+		mov [boton_columna],17
+		mov [boton_renglon],11
+		mov [boton_color],bgAzulClaro
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'H',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'x',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Bin
+		mov [boton_columna],17
+		mov [boton_renglon],15
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'B',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'i',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
+
+		ret
+	endp
+
+	SELECT_BIN proc
+
+	 ;Imprime Boton Dec
+		mov [boton_columna],17
+		mov [boton_renglon],7
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'D',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'c',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Hex
+		mov [boton_columna],17
+		mov [boton_renglon],11
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'H',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'x',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Bin
+		mov [boton_columna],17
+		mov [boton_renglon],15
+		mov [boton_color],bgAzulClaro
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'B',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'i',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
+
+		ret
+	endp
 
 end inicio
