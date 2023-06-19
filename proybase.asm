@@ -749,13 +749,14 @@ lee_oper1:
 	cmp [conta1],4 		;compara si el contador para num1 llego al maximo
 	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
-	cmp num_boton,0
-	je case_0
-	jne base_cmp
+
+	cmp num_boton,0		;prueba si el num_botn es 0	
+	je case_0			;si es 0 salta a case_0
+	jne base_cmp		;Si no es salta a base_cmp
 
 case_0:	
-	cmp conta1,0
-	je no_lee_num
+	cmp conta1,0		;compara si conta1 es 0
+	je no_lee_num		;si es igual no agrega mas 0's a pantalla
 	
 base_cmp:
 	cmp id_base,1		;Si id_base = 1 (hex)
