@@ -622,6 +622,11 @@ botonX_3:
 ;Logica para revisar si el mouse fue presionado en '1'
 ;boton '1' se encuentra entre renglones 15 y 17,
 ;y entre columnas 24 y 28
+boton0_1:
+	;Se cumplieron todas las condiciones
+	mov num_boton,0
+	jmp jmp_lee_oper1		 ;Salto a 'jmp_lee_oper1' para procesar el numero
+
 boton1_1:
 	;Se cumplieron todas las condiciones
 	mov num_boton,1
@@ -732,11 +737,11 @@ jmp_lee_oper1:
 ;Logica para revisar si el mouse fue presionado en C
 ;boton C se encuentra entre renglones 18 y 20,
 ;y entre columnas 24 y 28
-boton0_1:
+;boton0_1:
 	;Agregar la logica para verificar el boton 
 	;y limpiar la pantalla de la calculadora
-	mov num_boton,0
-	jmp jmp_lee_oper1 
+	
+	;jmp jmp_lee_oper1 
 
 lee_oper1:
 	cmp [operador],0	;compara el valor del operador que puede ser 0, '+', '-', '*', '/', '%'
@@ -744,7 +749,15 @@ lee_oper1:
 	cmp [conta1],4 		;compara si el contador para num1 llego al maximo
 	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
+	cmp num_boton,0
+	je case_0
+	jne base_cmp
+
+case_0:	
+	cmp conta1,0
+	je no_lee_num
 	
+base_cmp:
 	cmp id_base,1		;Si id_base = 1 (hex)
 	je agregar_num_arr	;Imprime todos los numeros
 
