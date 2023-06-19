@@ -270,22 +270,6 @@ mouse:
 	;no hay nada que revisar
 	cmp cx,17
 	jb mouse_no_clic
-	;Si el mouse fue presionado en la columna 29
-	;no hay nada que revisar
-	cmp cx,29
-	je mouse_no_clic
-	;Si el mouse fue presionado en la columna 
-	;no hay nada que revisar
-	cmp cx,35
-	je mouse_no_clic
-	;Si el mouse fue presionado en la columna 40
-	;no hay nada que revisar
-	cmp cx,41
-	je mouse_no_clic
-	;Si el mouse fue presionado despues de la columna 62
-	;no hay nada que revisar
-	cmp cx,62
-	jg mouse_no_clic
 
 	;Si el mouse fue presionado antes de la columna 21 y despues de la 17
 	;es posible se haya presionado en un boton de base numerica
@@ -302,18 +286,30 @@ mouse:
 	;Botones entre columnas 24 y 28: '7', '4', '1', '0'
 	cmp cx,28
 	jbe botones_7_4_1_0
+	;Si el mouse fue presionado en la columna 29
+	;no hay nada que revisar
+	cmp cx,29
+	je mouse_no_clic
 
 	;Si el mouse fue presionado antes o dentro de la columna 34 y despues de la 30
 	;revisar si fue dentro de un boton
 	;Botones entre columnas 30 y 34: '8', '5', '1', 'A'
 	cmp cx,34
 	jbe botones_8_5_2_A
+	;Si el mouse fue presionado en la columna 
+	;no hay nada que revisar
+	cmp cx,35
+	je mouse_no_clic
 
 	;Si el mouse fue presionado antes o dentro de la columna 40 y despues de la 36
 	;revisar si fue dentro de un boton
 	;Botones entre columnas 36 y 40: '9', '6', '3', 'B'
-	cmp cx,41
+	cmp cx,40
 	jbe botones_9_6_3_B
+	;Si el mouse fue presionado en la columna 41
+	;no hay nada que revisar
+	cmp cx,41
+	je mouse_no_clic
 
 	;Si el mouse fue presionado antes o dentro de la columna 46 y despues de la 42
 	;revisar si fue dentro de un boton
@@ -323,15 +319,24 @@ mouse:
 
 	;Si el mouse fue presionado antes o dentro de la columna 55 y despues de la 51
 	;revisar si fue dentro de un boton
-	;Botones entre columnas 42 y 55: '+', '*', '%'
+	;Botones entre columnas 51 y 55: '+', '*', '%'
 	cmp cx,55
 	jbe botones_Suma_Multilicacion_Residuo
+	;Si el mouse fue presionado en las columnas 56 y 57
+	;no hay nada que revisar
+	cmp cx,56
+	je mouse_no_clic
+	cmp cx,57
+	je mouse_no_clic
 
 	;Si el mouse fue presionado antes o dentro de la columna 62 y despues de la 58
 	;revisar si fue dentro de un boton
-	;Botones entre columnas 42 y 62: '+', '*', '%'
+	;Botones entre columnas 58 y 62: '-', '/', '='
 	cmp cx,62
 	jbe botones_Resta_Cociente_Igual
+	;Si el mouse fue presionado despues de la columna 62
+	;no hay nada que revisar
+	jg mouse_no_clic
 
 	;;;
 	;;; COMPLETAR COMPARACIONES
