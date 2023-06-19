@@ -586,14 +586,17 @@ botonIgual:
 botonDec:
 	mov id_base,0				;0 = Dec
 	call LIMPIA_PANTALLA_CALC
+	call SELECT_DEC
 	jmp mouse_no_clic
 botonHex:
 	mov id_base,1				;1 = hex
 	call LIMPIA_PANTALLA_CALC
+	call SELECT_HEX
 	jmp mouse_no_clic
 botonBin:
 	mov id_base,2				;2 = bin
 	call LIMPIA_PANTALLA_CALC
+	call SELECT_BINc:
 	jmp mouse_no_clic
 ;Logica para revisar si el mouse fue presionado en [X]
 ;[X] se encuentra en renglon 0 y entre columnas 76 y 79
@@ -1156,7 +1159,7 @@ salir:
 		;Imprime Boton Clr
 		mov [boton_columna],17
 		mov [boton_renglon],19
-		mov [boton_color],bgAzul
+		mov [boton_color],bgCyan
         mov [boton_caracter_color],cBlanco
 		call IMPRIME_BOTON
         inc [boton_columna]
@@ -1369,5 +1372,173 @@ salir:
 
 		ret 			;Regreso de llamada a procedimiento
 	endp	 			;Indica fin de procedimiento UI para el ensamblador
+
+	SELECT_DEC proc
+
+	 ;Imprime Boton Dec
+		mov [boton_columna],17
+		mov [boton_renglon],7
+		mov [boton_color],bgAzulClaro
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'D',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'c',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Hex
+		mov [boton_columna],17
+		mov [boton_renglon],11
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'H',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'x',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Bin
+		mov [boton_columna],17
+		mov [boton_renglon],15
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'B',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'i',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
+
+		ret
+	endp	
+
+	SELECT_HEX proc
+
+	 ;Imprime Boton Dec
+		mov [boton_columna],17
+		mov [boton_renglon],7
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'D',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'c',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Hex
+		mov [boton_columna],17
+		mov [boton_renglon],11
+		mov [boton_color],bgAzulClaro
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'H',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'x',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Bin
+		mov [boton_columna],17
+		mov [boton_renglon],15
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'B',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'i',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
+
+		ret
+	endp
+
+	SELECT_BIN proc
+
+	 ;Imprime Boton Dec
+		mov [boton_columna],17
+		mov [boton_renglon],7
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'D',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'c',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Hex
+		mov [boton_columna],17
+		mov [boton_renglon],11
+		mov [boton_color],bgAzul
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'H',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'e',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'x',[boton_color],[boton_caracter_color]
+
+        ;Imprime Boton Bin
+		mov [boton_columna],17
+		mov [boton_renglon],15
+		mov [boton_color],bgAzulClaro
+        mov [boton_caracter_color],cBlanco
+		call IMPRIME_BOTON
+        inc [boton_columna]
+        inc [boton_renglon]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'B',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'i',[boton_color],[boton_caracter_color]
+        inc [boton_columna]
+        posiciona_cursor [boton_renglon],[boton_columna]
+		imprime_caracter_color 'n',[boton_color],[boton_caracter_color]
+
+		ret
+	endp
 
 end inicio
