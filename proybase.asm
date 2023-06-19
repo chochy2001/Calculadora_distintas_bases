@@ -708,27 +708,27 @@ botonF_1:
 
 botonSuma_1:
 	mov operador,02Bh		;O2Bh = '+' en ASCII
-	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'print_operador' imprimir simbolo	
 
 botonResta_1:
 	mov operador,02Dh	 	;O2Dh = '-' en ASCII
-	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'print_operador' imprimir simbolo	
 
 botonMult_1:
 	mov operador,02Ah		;O2Ah = '*' en ASCII
-	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'print_operador' imprimir simbolo	
 
 botonDivC_1:
 	mov operador,02Fh		;02Fh = '/' en ASCII
-	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'print_operador' imprimir simbolo	
 
 botonDivR_1:
 	mov operador,025h		;025h = '%' en ASCII
-	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'print_operador' imprimir simbolo	
 
 botonIgual_1:
 	mov operador,03Dh		;03Dh = '=' en ASCII
-	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_igual		;Salto a 'print_operador' imprimir simbolo	
 
 ;Salto auxiliar para hacer un salto más largo
 jmp_lee_oper1:
@@ -743,9 +743,20 @@ jmp_lee_oper1:
 	
 	;jmp jmp_lee_oper1
 
+print_igual:
+	call NUM2P
+	xor bx,bx
+	mov bx,num1h
+	;add bx,num2h
+
+	;mov bx, resultado
+	call IMPRIME_BX
+	jmp no_lee_num
+
 print_operador:
 	posiciona_cursor 4,52d
 	imprime_caracter_color operador,bgNegro,cBlanco
+	call NUM1P
 	jmp no_lee_num
 
 
@@ -888,7 +899,6 @@ print_char2:
 no_lee_num:
 	jmp mouse_no_clic
 
-
 ;Si no se encontró el driver del mouse, muestra un mensaje y debe salir tecleando [enter]
 teclado:
 	mov ah,08h
@@ -900,6 +910,179 @@ salir:
  	clear
 	mov ax,4C00h
 	int 21h
+
+NUM1P proc
+
+	cmp num1h,0
+	jne exitproc1
+
+	cmp id_base,0
+	je num1_dec
+
+	cmp id_base,1
+	je num1_hex
+
+	cmp id_base,2
+	je num1_bin
+
+	num1_dec:
+		mov al,[num1]
+		mov bx, 1000
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+1]
+		mov bx, 100
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+2]
+		mov bx, 10
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+3]
+		mov bx, 1
+		mul bx
+		add num1h,ax
+
+		jmp exitproc1
+
+	num1_hex:
+		mov al,[num1]
+		mov bx, 1000h
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+1]
+		mov bx, 100h
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+2]
+		mov bx, 10h
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+3]
+		mov bx, 1
+		mul bx
+		add num1h,ax
+
+		jmp exitproc1
+
+	num1_bin:
+		mov al,[num1]
+		mov bx, 8
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+1]
+		mov bx, 4
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+2]
+		mov bx, 2
+		mul bx
+		add num1h,ax
+
+		mov al,[num1+3]
+		mov bx, 1
+		mul bx
+		add num1h,ax
+
+	exitproc1:
+
+	ret
+	endp 
+
+NUM2P proc
+
+	cmp num2h,0
+	jne exitproc
+
+	cmp id_base,0
+	je num2_dec
+
+	cmp id_base,1
+	je num2_hex
+
+	cmp id_base,2
+	je num2_bin
+
+	num2_dec:
+		mov al,[num2]
+		mov bx, 1000
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+1]
+		mov bx, 100
+		mul bx
+		add num2h,ax
+
+		mov al,[num1+2]
+		mov bx, 10
+		mul bx
+		add num1h,ax
+
+		mov al,[num2+3]
+		mov bx, 1
+		mul bx
+		add num2h,ax
+
+		jmp exitproc
+
+	num2_hex:
+		mov al,[num2]
+		mov bx, 1000h
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+1]
+		mov bx, 100h
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+2]
+		mov bx, 10h
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+3]
+		mov bx, 1
+		mul bx
+		add num2h,ax
+
+		jmp exitproc
+
+	num2_bin:
+		mov al,[num2]
+		mov bx, 8
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+1]
+		mov bx, 4
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+2]
+		mov bx, 2
+		mul bx
+		add num2h,ax
+
+		mov al,[num2+3]
+		mov bx, 1
+		mul bx
+		add num2h,ax
+
+	exitproc:
+
+	ret
+endp 
+
 
 	;procedimiento MARCO_UI
 	;no requiere parametros de entrada
@@ -1337,6 +1520,7 @@ salir:
 		add al,30h				;Pasa el digito en AL a su valor ASCII
 		mov [num_impr],al 		;Pasa el digito a una variable de memoria ya que AL se modifica en las siguientes macros
 		push cx
+		mov [ren_aux],5
 		posiciona_cursor [ren_aux],[col_aux]
 		imprime_caracter_color [num_impr],bgNegro,cBlanco	
 		pop cx
@@ -1465,7 +1649,7 @@ salir:
 	SELECT_DEC proc
 
 	 ;Imprime Boton Dec
-		mov [boton_columna],17
+	 	mov [boton_columna],17
 		mov [boton_renglon],7
 		mov [boton_color],bgAzulClaro
         mov [boton_caracter_color],cBlanco
