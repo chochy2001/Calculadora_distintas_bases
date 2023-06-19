@@ -708,27 +708,27 @@ botonF_1:
 
 botonSuma_1:
 	mov operador,02Bh		;O2Bh = '+' en ASCII
-	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 botonResta_1:
 	mov operador,02Dh	 	;O2Dh = '-' en ASCII
-	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 botonMult_1:
 	mov operador,02Ah		;O2Ah = '*' en ASCII
-	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 botonDivC_1:
 	mov operador,02Fh		;02Fh = '/' en ASCII
-	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 botonDivR_1:
 	mov operador,025h		;025h = '%' en ASCII
-	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 botonIgual_1:
 	mov operador,03Dh		;03Dh = '=' en ASCII
-	jmp jmp_lee_oper1		;Salto a 'jmp_lee_oper1' para procesar el numero	
+	jmp print_operador		;Salto a 'jmp_lee_oper1' para procesar el numero	
 
 ;Salto auxiliar para hacer un salto más largo
 jmp_lee_oper1:
@@ -741,7 +741,13 @@ jmp_lee_oper1:
 	;Agregar la logica para verificar el boton 
 	;y limpiar la pantalla de la calculadora
 	
-	;jmp jmp_lee_oper1 
+	;jmp jmp_lee_oper1
+
+print_operador:
+	posiciona_cursor 4,52d
+	imprime_caracter_color operador,bgNegro,cBlanco
+	jmp no_lee_num
+
 
 lee_oper1:
 	cmp [operador],0	;compara el valor del operador que puede ser 0, '+', '-', '*', '/', '%'
@@ -816,12 +822,8 @@ lee_oper2:
 	cmp [conta2],4 		;compara si el contador para num2 llego al maximo
 	jae no_lee_num 		;si conta2 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
-	cmp [conta2],4 		;compara si el contador para num1 llego al maximo
-	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
-						;y no hace nada
-
 	cmp num_boton,0		;prueba si el num_botn es 0	
-	je case_0			;si es 0 salta a case_0
+	je case_02			;si es 0 salta a case_0
 	jne base_cmp2		;Si no es salta a base_cmp
 
 case_02:	
@@ -860,7 +862,7 @@ agregar_num_arr2:
 	;Se imprime el numero del arreglo num1 de acuerdo a conta1
 	xor di,di 			;limpia DI para utilizarlo
 	mov cx,[conta2] 	;prepara CX para loop de acuerdo al numero de digitos introducidos
-	mov [ren_aux],3 	;variable ren_aux para hacer operaciones en pantalla 
+	mov [ren_aux],4 	;variable ren_aux para hacer operaciones en pantalla 
 						;ren_aux se mantiene fijo a lo largo del siguiente loop
 imprime_num2:
 	push cx 				;guarda el valor de CX en la pila
