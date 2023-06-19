@@ -816,6 +816,72 @@ lee_oper2:
 	cmp [conta2],4 		;compara si el contador para num2 llego al maximo
 	jae no_lee_num 		;si conta2 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
 						;y no hace nada
+	cmp [conta2],4 		;compara si el contador para num1 llego al maximo
+	jae no_lee_num 		;si conta1 es mayor o igual a 4, entonces se ha alcanzado el numero de digitos
+						;y no hace nada
+
+	cmp num_boton,0		;prueba si el num_botn es 0	
+	je case_0			;si es 0 salta a case_0
+	jne base_cmp2		;Si no es salta a base_cmp
+
+case_02:	
+	cmp conta2,0		;compara si conta1 es 0
+	je no_lee_num		;si es igual no agrega mas 0's a pantalla
+	
+base_cmp2:
+	cmp id_base,1		;Si id_base = 1 (hex)
+	je agregar_num_arr2	;Imprime todos los numeros
+
+	cmp id_base,2		;si id_base = 2 (bin)
+	je case_id_22		;salta a case_id_2
+
+	cmp id_base,0		;si id_base = 0 (Dec)
+	je case_id_02		;salta a case_id_0 
+
+case_id_02:
+	cmp num_boton,9		;compara numero seleccionado con 9
+	jg no_lee_num		;si es mayor no leas numero
+	jle agregar_num_arr2	;si es menor o igual, agrega numero
+
+case_id_22:
+	cmp num_boton,1		;compara numero seleccionado con 1
+	jg no_lee_num		;si es mayor, no leas		
+	jle agregar_num_arr2	;si es menor o igual, agrega
+
+
+agregar_num_arr2:
+	mov al,num_boton	;valor del boton presionado en AL
+	mov di,[conta2] 	;copia el valor de conta1 en registro indice DI
+	mov [num2+di],al 	;num1 es un arreglo de tipo byte
+						;se utiliza di para acceder el elemento di-esimo del arreglo num1
+						;se guarda el valor del boton presionado en el arreglo
+	inc [conta2] 		;incrementa conta1 por numero correctamente leido
+	
+	;Se imprime el numero del arreglo num1 de acuerdo a conta1
+	xor di,di 			;limpia DI para utilizarlo
+	mov cx,[conta2] 	;prepara CX para loop de acuerdo al numero de digitos introducidos
+	mov [ren_aux],3 	;variable ren_aux para hacer operaciones en pantalla 
+						;ren_aux se mantiene fijo a lo largo del siguiente loop
+imprime_num2:
+	push cx 				;guarda el valor de CX en la pila
+	mov [col_aux],58d 		;variable col_aux para hacer operaciones en pantalla 
+							;para recorrer la pantalla al imprimir el numero
+	sub [col_aux],cl 		;Para calcular la columna en donde comienza a imprimir en pantalla de acuerdo a CX
+	posiciona_cursor [ren_aux],[col_aux] 	;Posiciona el cursor en pantalla usando ren_aux y col_aux
+	mov cl,[num2+di] 		;copia el digito en CL
+	add cl,30h				;Pasa valor ASCII
+	cmp cl,39h				;Compara si CL con a 39h
+	jbe print_char2			;Salta a print_char si es menor o igual a 39h
+	add cl,7				;Suma 7 para transformar ASCII HEX
+	
+print_char2:
+	imprime_caracter_color cl,bgNegro,cBlanco	;Imprime caracter en CL, color blanco
+	inc di 					;incrementa DI para recorrer el arreglo num1
+	pop cx 					;recupera el valor de CX al inicio del loop
+	loop imprime_num2 		
+
+	jmp mouse_no_clic					
+
 
 no_lee_num:
 	jmp mouse_no_clic
