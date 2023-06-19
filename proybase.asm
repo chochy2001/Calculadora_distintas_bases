@@ -354,6 +354,10 @@ botones_base_num:
 	cmp dx,17
 	jbe botonBin
 
+	;corresponde con boton 'Cls'
+	cmp dx,21
+	jbe botonCls
+
 	;;;;;Completar
 
 botones_7_4_1_0:
@@ -596,8 +600,11 @@ botonHex:
 botonBin:
 	mov id_base,2				;2 = bin
 	call LIMPIA_PANTALLA_CALC
-	call SELECT_BINc:
+	call SELECT_BIN
 	jmp mouse_no_clic
+botonCls:
+	call LIMPIA_PANTALLA_CALC
+	jmp mouse_no_clic	
 ;Logica para revisar si el mouse fue presionado en [X]
 ;[X] se encuentra en renglon 0 y entre columnas 76 y 79
 botonX_1:
