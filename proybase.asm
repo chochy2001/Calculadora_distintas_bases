@@ -727,8 +727,7 @@ botonDivR_1:
 	jmp print_operador		;Salto a 'print_operador' imprimir simbolo	
 
 botonIgual_1:
-	mov operador,03Dh		;03Dh = '=' en ASCII
-	jmp print_igual		;Salto a 'print_operador' imprimir simbolo	
+	jmp print_igual		;Salto a 'print_igual' para evaluar e imprimir
 
 ;Salto auxiliar para hacer un salto más largo
 jmp_lee_oper1:
@@ -745,11 +744,14 @@ jmp_lee_oper1:
 
 print_igual:
 	call NUM2P
+	mov [ren_aux],5
+	mov [col_aux],54d
 	xor bx,bx
-	mov bx,num1h
-	;add bx,num2h
-
-	;mov bx, resultado
+	mov bx,num2h
+	cmp bx,10000d
+	jb imprime_igual_bx
+	dec [col_aux]
+imprime_igual_bx:
 	call IMPRIME_BX
 	jmp no_lee_num
 
@@ -916,6 +918,10 @@ NUM1P proc
 	cmp num1h,0
 	jne exitproc1
 
+	mov cx,[conta1]
+	jcxz exitproc1
+	xor si,si
+
 	cmp id_base,0
 	je num1_dec
 
@@ -924,73 +930,28 @@ NUM1P proc
 
 	cmp id_base,2
 	je num1_bin
+	jmp exitproc1
 
 	num1_dec:
-		mov al,[num1]
-		mov bx, 1000
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+1]
-		mov bx, 100
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+2]
 		mov bx, 10
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+3]
-		mov bx, 1
-		mul bx
-		add num1h,ax
-
-		jmp exitproc1
+		jmp num1_loop
 
 	num1_hex:
-		mov al,[num1]
-		mov bx, 1000h
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+1]
-		mov bx, 100h
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+2]
 		mov bx, 10h
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+3]
-		mov bx, 1
-		mul bx
-		add num1h,ax
-
-		jmp exitproc1
+		jmp num1_loop
 
 	num1_bin:
-		mov al,[num1]
-		mov bx, 8
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+1]
-		mov bx, 4
-		mul bx
-		add num1h,ax
-
-		mov al,[num1+2]
 		mov bx, 2
-		mul bx
-		add num1h,ax
 
-		mov al,[num1+3]
-		mov bx, 1
+	num1_loop:
+		mov ax,num1h
 		mul bx
-		add num1h,ax
+		xor dh,dh
+		mov dl,[num1+si]
+		add ax,dx
+		mov num1h,ax
+		inc si
+		loop num1_loop
 
 	exitproc1:
 
@@ -1002,6 +963,10 @@ NUM2P proc
 	cmp num2h,0
 	jne exitproc
 
+	mov cx,[conta2]
+	jcxz exitproc
+	xor si,si
+
 	cmp id_base,0
 	je num2_dec
 
@@ -1010,73 +975,28 @@ NUM2P proc
 
 	cmp id_base,2
 	je num2_bin
+	jmp exitproc
 
 	num2_dec:
-		mov al,[num2]
-		mov bx, 1000
-		mul bx
-		add num2h,ax
-
-		mov al,[num2+1]
-		mov bx, 100
-		mul bx
-		add num2h,ax
-
-		mov al,[num1+2]
 		mov bx, 10
-		mul bx
-		add num1h,ax
-
-		mov al,[num2+3]
-		mov bx, 1
-		mul bx
-		add num2h,ax
-
-		jmp exitproc
+		jmp num2_loop
 
 	num2_hex:
-		mov al,[num2]
-		mov bx, 1000h
-		mul bx
-		add num2h,ax
-
-		mov al,[num2+1]
-		mov bx, 100h
-		mul bx
-		add num2h,ax
-
-		mov al,[num2+2]
 		mov bx, 10h
-		mul bx
-		add num2h,ax
-
-		mov al,[num2+3]
-		mov bx, 1
-		mul bx
-		add num2h,ax
-
-		jmp exitproc
+		jmp num2_loop
 
 	num2_bin:
-		mov al,[num2]
-		mov bx, 8
-		mul bx
-		add num2h,ax
-
-		mov al,[num2+1]
-		mov bx, 4
-		mul bx
-		add num2h,ax
-
-		mov al,[num2+2]
 		mov bx, 2
-		mul bx
-		add num2h,ax
 
-		mov al,[num2+3]
-		mov bx, 1
+	num2_loop:
+		mov ax,num2h
 		mul bx
-		add num2h,ax
+		xor dh,dh
+		mov dl,[num2+si]
+		add ax,dx
+		mov num2h,ax
+		inc si
+		loop num2_loop
 
 	exitproc:
 
@@ -1520,7 +1440,6 @@ endp
 		add al,30h				;Pasa el digito en AL a su valor ASCII
 		mov [num_impr],al 		;Pasa el digito a una variable de memoria ya que AL se modifica en las siguientes macros
 		push cx
-		mov [ren_aux],5
 		posiciona_cursor [ren_aux],[col_aux]
 		imprime_caracter_color [num_impr],bgNegro,cBlanco	
 		pop cx
@@ -1642,6 +1561,13 @@ endp
 		mov [num_boton],0
 		mov [num1h],0
 		mov [num2h],0
+		xor di,di
+		mov cx,digitos
+	limpia_arreglos_num:
+		mov [num1+di],0
+		mov [num2+di],0
+		inc di
+		loop limpia_arreglos_num
 
 		ret 			;Regreso de llamada a procedimiento
 	endp	 			;Indica fin de procedimiento UI para el ensamblador
